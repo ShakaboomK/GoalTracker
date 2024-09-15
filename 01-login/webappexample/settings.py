@@ -9,12 +9,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "auth0-webappexample-k0n4a#6cqu9=co$_bu^^sd@&^8#*%ukg3z4ku!lj&j)%^@cx8%"
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-secret-key-here')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['goaltracker-r7n8.onrender.com']
+ALLOWED_HOSTS = ['goaltracker-r7n8.onrender.com','localhost', '127.0.0.1']
 
 # Application definition
 
@@ -24,12 +24,14 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.staticfiles",
     "corsheaders",
     "Userdata",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -112,14 +114,17 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #-------------------------------------------------------------
-SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
-CSRF_COOKIE_SECURE = True  # Send CSRF cookie over HTTPS only
-SESSION_COOKIE_SECURE = True  # Send session cookie over HTTPS only
-# SECURE_HSTS_SECONDS = 3600  # HTTP Strict Transport Security
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
+SECURE_SSL_REDIRECT = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+SECURE_HSTS_SECONDS = 3600 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
 #------------------------------------------------------------------
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Load environment definition file
 
