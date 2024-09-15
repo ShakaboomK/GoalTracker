@@ -111,6 +111,14 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#-------------------------------------------------------------
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+CSRF_COOKIE_SECURE = True  # Send CSRF cookie over HTTPS only
+SESSION_COOKIE_SECURE = True  # Send session cookie over HTTPS only
+SECURE_HSTS_SECONDS = 3600  # HTTP Strict Transport Security
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+#------------------------------------------------------------------
 
 
 # Load environment definition file
