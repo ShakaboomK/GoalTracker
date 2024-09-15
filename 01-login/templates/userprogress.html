@@ -1,0 +1,30 @@
+{% extends 'userbase.html' %}
+{% load static %}
+
+{% block contents %}
+
+<div class="container mx-auto my-8">
+    <h1 class="text-3xl font-bold mb-6">User Progress</h1>
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+        {% for gd in goal_data %}
+            <div class="goal bg-gray-700 p-4 rounded-lg mb-4">
+                <div class="flex justify-between items-center">
+                    <span>{{ gd.goal.title }}</span>
+                    <div class="w-1/2 ml-4">
+                        <div class="w-full bg-gray-300 rounded-full h-2.5">
+                            <div class="h-2.5 rounded-full" style="width: {{ gd.completed_percentage }}%; background-color: {{ gd.progress_color }}" role="progressbar" aria-valuenow="{{ gd.completed_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="text-xs text-gray-400 text-right mt-1">{{ gd.completed_percentage }}%</div>
+                    </div>
+                </div>
+                <div class="mt-2 text-gray-400">
+                    <p>Total Subtasks: {{ gd.total_subtasks }}</p>
+                    <p>Completed Subtasks: {{ gd.completed_subtasks }}</p>
+                    <p>Required Per Day: {{ gd.required_per_day }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

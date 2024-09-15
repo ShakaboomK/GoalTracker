@@ -1,0 +1,151 @@
+{% extends 'userbase.html' %}
+{% load static %}
+
+{% block contents %}
+
+<section id="contact" class="p-20 bg-gray-700 text-white">
+  <div class="container mx-auto text-center">
+    <h3 class="text-3xl font-bold mb-4">Create Goal</h3>
+    <p class="text-lg mb-2">Title: {{ request.session.title }}</p>
+    <p class="text-lg mb-2">Start Date: {{ request.session.startdate }}</p>
+    <p class="text-lg mb-8">End Date: {{ request.session.enddate }}</p>
+
+    <form action="{% url 'save_manual_goal_with_steps' %}" method="post" class="max-w-lg mx-auto">
+      {% csrf_token %}
+      
+      <div id="steps-container" class="mb-4">
+        <!-- Steps will be dynamically added here -->
+      </div>
+
+      <button type="button" id="add-step" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700 mb-4">Add Step</button>
+      
+      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Create</button>
+    </form>
+  </div>
+</section>
+
+<style>
+    input[type="text"], input[type="number"] {
+        color: black;
+    }
+    .step, .subtask {
+        position: relative;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background-color: #2d3748;
+        border-radius: 0.5rem;
+    }
+    .step .delete-step, .subtask .delete-subtask {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        color: red;
+        cursor: pointer;
+    }
+    .step input, .subtask input {
+        color: black;
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let stepCounter = 0;
+    
+        function addStep() {
+            stepCounter++;
+            const stepsContainer = document.getElementById('steps-container');
+            const stepDiv = document.createElement('div');
+            stepDiv.classList.add('step', 'mb-4', 'p-4', 'bg-gray-800', 'rounded', 'relative');
+    
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-step');
+            deleteButton.innerHTML = '&times;';
+            deleteButton.onclick = () => stepDiv.remove();
+            stepDiv.appendChild(deleteButton);
+    
+            const stepNameLabel = document.createElement('label');
+            stepNameLabel.classList.add('block', 'text-sm', 'font-bold', 'mb-2');
+            stepNameLabel.textContent = `Step Name ${stepCounter}`;
+            stepDiv.appendChild(stepNameLabel);
+    
+            const stepNameInput = document.createElement('input');
+            stepNameInput.type = 'text';
+            stepNameInput.name = `stepname_${stepCounter}`;
+            stepNameInput.classList.add('w-full', 'p-2', 'rounded', 'mb-2');
+            stepDiv.appendChild(stepNameInput);
+    
+            const stepWeightageLabel = document.createElement('label');
+            stepWeightageLabel.classList.add('block', 'text-sm', 'font-bold', 'mb-2');
+            stepWeightageLabel.textContent = 'Step Weightage';
+            stepDiv.appendChild(stepWeightageLabel);
+    
+            const stepWeightageInput = document.createElement('input');
+            stepWeightageInput.type = 'number';
+            stepWeightageInput.name = `stepweightage_${stepCounter}`;
+            stepWeightageInput.classList.add('w-full', 'p-2', 'rounded', 'mb-2');
+            stepDiv.appendChild(stepWeightageInput);
+    
+            const subtaskLabel = document.createElement('label');
+            subtaskLabel.classList.add('block', 'text-sm', 'font-bold', 'mb-2');
+            subtaskLabel.textContent = 'Subtasks';
+            stepDiv.appendChild(subtaskLabel);
+    
+            const addSubtaskButton = document.createElement('button');
+            addSubtaskButton.type = 'button';
+            addSubtaskButton.classList.add('add-subtask', 'bg-green-500', 'text-white', 'py-1', 'px-4', 'rounded', 'hover:bg-green-700', 'mb-4');
+            addSubtaskButton.textContent = 'Add Subtask';
+            stepDiv.appendChild(addSubtaskButton);
+    
+            const subtasksContainer = document.createElement('div');
+            subtasksContainer.classList.add('subtasks-container', 'mb-4');
+            subtasksContainer.setAttribute('data-step', stepCounter);
+            stepDiv.appendChild(subtasksContainer);
+    
+            addSubtaskButton.addEventListener('click', function () {
+                addSubtask(subtasksContainer, stepCounter);
+            });
+    
+            stepsContainer.appendChild(stepDiv);
+        }
+    
+        function addSubtask(subtasksContainer, stepIndex) {
+            const subtaskDiv = document.createElement('div');
+            subtaskDiv.classList.add('subtask', 'flex', 'justify-between', 'relative', 'mb-4');
+    
+            const subtaskDeleteButton = document.createElement('button');
+            subtaskDeleteButton.classList.add('delete-subtask');
+            subtaskDeleteButton.innerHTML = '&times;';
+            subtaskDeleteButton.onclick = () => subtaskDiv.remove();
+            subtaskDiv.appendChild(subtaskDeleteButton);
+    
+            const subtaskName = document.createElement('input');
+            subtaskName.type = 'text';
+            subtaskName.name = `subtaskname_${stepIndex}[]`;
+            subtaskName.placeholder = 'Subtask Name';
+            subtaskName.classList.add('w-1/2', 'p-2', 'rounded', 'mr-2');
+    
+            const subtaskWeightage = document.createElement('input');
+            subtaskWeightage.type = 'number';
+            subtaskWeightage.name = `subtaskweightage_${stepIndex}[]`;
+            subtaskWeightage.placeholder = 'Subtask Weightage';
+            subtaskWeightage.classList.add('w-1/2', 'p-2', 'rounded');
+    
+            subtaskDiv.appendChild(subtaskName);
+            subtaskDiv.appendChild(subtaskWeightage);
+    
+            subtasksContainer.appendChild(subtaskDiv);
+        }
+    
+        document.getElementById('add-step').addEventListener('click', addStep);
+    
+        // Initialize with one step
+        addStep();
+    });
+    
+</script>
+
+{% endblock %}
