@@ -45,9 +45,14 @@ def callback(request):
 
 
 def login(request):
+    # return oauth.auth0.authorize_redirect(
+    #     request, request.build_absolute_uri(reverse("callback"))
+    # )
+    callback_url = request.build_absolute_uri(reverse("callback"))
+    print(f"Constructed callback URL: {callback_url}")  # Or use a logger
+
     return oauth.auth0.authorize_redirect(
-        request, request.build_absolute_uri(reverse("callback"))
-    )
+        request, callback_url)
 
 
 def logout(request):
