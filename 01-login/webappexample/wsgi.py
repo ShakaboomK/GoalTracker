@@ -1,7 +1,14 @@
-import os
+# import os
 
+# from django.core.wsgi import get_wsgi_application
+
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webappexample.settings")
+
+# application = get_wsgi_application()
+
+import os
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webappexample.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webappexample.settings')
 
 application = get_wsgi_application()

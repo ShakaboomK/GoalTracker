@@ -7,7 +7,7 @@ from urllib.parse import quote_plus, urlencode
 from django.db import transaction
 from Userdata.models import Goal, Step, SubTask, Progress
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from datetime import datetime, timedelta
@@ -36,6 +36,9 @@ def index(request):
             "pretty": json.dumps(request.session.get("user"), indent=4),
         },
     )
+    
+def health_check(request):
+    return HttpResponse("OK")
 
 
 def callback(request):

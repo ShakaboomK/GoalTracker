@@ -9,6 +9,7 @@ urlpatterns = [
     path("login", views.login, name="login"),
     path("logout", views.logout, name="logout"),
     path("callback", views.callback, name="callback"),
+    path('health/', views.health_check, name='health_check'),
 
     path('userhome/', views.userhome, name='userhome'),
     path('creategoaltitle/', views.creategoaltitle, name='creategoaltitle'),
